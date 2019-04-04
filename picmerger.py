@@ -9,20 +9,13 @@ from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
 
 # ########################################## #
- #PUT HERE THE FILE NUMBER -----------V
-bar = progressbar.ProgressBar(maxval=260, \
-    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
-
-#PUT THE NUMBER OF PIXEL IN THE BIGPIC ----V
-mergebar = progressbar.ProgressBar(maxval=810, \
-    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
-
-# ########################################## #
+bigpic_filename = "bigpic_70x63_4410.png" # <--- Extension should be .png
 number_of_pictures = 259
 
-bigpicW = 30
-bigpicH = 27
+bigpicW = 70
+bigpicH = 63
 bigpic_ratio = bigpicH/bigpicW
+bigpic_pixels = bigpicW*bigpicH
 
 basewidth = 128
 hsize = int( bigpic_ratio*basewidth )
@@ -31,6 +24,13 @@ pics_horizontally = bigpicW
 pics_vertically = bigpicH
 total_width = pics_horizontally * basewidth
 total_height = pics_vertically * hsize
+
+# ########################################## #
+bar = progressbar.ProgressBar(maxval=number_of_pictures+1, \
+    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+
+mergebar = progressbar.ProgressBar(maxval=bigpic_pixels+1, \
+    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 
 # ########################################## #
 def colordiff(r1, g1, b1, r2, g2, b2):
@@ -119,7 +119,7 @@ bar.finish()
 # ########################################## #
 # STEP 4 : GENERATING MERGED PIC
 
-bigpic = Image.open('bigpic_30x27_810.png')
+bigpic = Image.open(bigpic_filename)
 merged_image = Image.new('RGB', (total_width, total_height))
 
 x_offset = 0
@@ -157,4 +157,4 @@ if bigpic.mode in ('RGBA', 'LA') or (bigpic.mode == 'P' and 'transparency' in bi
 		counter += 1
 mergebar.finish()
 
-merged_image.save("merged_pic3.jpg")
+merged_image.save("merged_pics/merged_pic7.jpg")
