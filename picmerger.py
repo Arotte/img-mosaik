@@ -51,7 +51,7 @@ def rgb2hex(r, g, b):
     return '#{:02x}{:02x}{:02x}'.format(r, g, b)
 
 # ########################################## #
-# STEP 1: RENAME PICS
+# STEP 1: RENAME PICS (uncomment if needed)
 '''
 counter = 1
 print("STEP 1 || Renaming images")
@@ -71,7 +71,7 @@ bar.finish()
 '''
 
 # ########################################## #
-# STEP 2: RESIZE PICS
+# STEP 2: RESIZE PICS (uncomment if needed)
 '''
 counter = 1
 print("\nSTEP 2 || Resizing images")
