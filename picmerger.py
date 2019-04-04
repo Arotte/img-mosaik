@@ -9,21 +9,21 @@ from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie2000
 
 # ########################################## #
-bigpic_filename = "bigpic_70x63_4410.png" # <--- Extension should be .png
-number_of_pictures = 259
+bigpic_filename = "bigpic2_182x146_26572.png" # <--- Extension should be .png
+number_of_pictures = 746
 
-bigpicW = 70
-bigpicH = 63
+bigpicW = 182
+bigpicH = 146
 bigpic_ratio = bigpicH/bigpicW
 bigpic_pixels = bigpicW*bigpicH
 
-basewidth = 128
-hsize = int( bigpic_ratio*basewidth )
+subpic_minW = 128
+subpic_minH = int(bigpic_ratio*subpic_minW)
 
 pics_horizontally = bigpicW
 pics_vertically = bigpicH
-total_width = pics_horizontally * basewidth
-total_height = pics_vertically * hsize
+total_width = pics_horizontally * subpic_minW
+total_height = pics_vertically * subpic_minH
 
 # ########################################## #
 bar = progressbar.ProgressBar(maxval=number_of_pictures+1, \
@@ -74,7 +74,7 @@ bar.finish()
 # STEP 2: RESIZE PICS
 '''
 counter = 1
-print("STEP 2 || Resizing images")
+print("\nSTEP 2 || Resizing images")
 bar.start()
 for infile in os.listdir("pics/."):
 	if ("jpg" in infile or "png" in infile):
@@ -84,12 +84,12 @@ for infile in os.listdir("pics/."):
 			#outfilename = str(counter) + ".png"
 
 		im = Image.open(os.path.join("pics",infile))
-		imgResized = im.resize( (basewidth, hsize), Image.ANTIALIAS )
+		resized = im.resize( (subpic_minW, subpic_minH), Image.ANTIALIAS )
 
 		if not os.path.exists("resized_pics"):
 			os.mkdir("resized_pics")
 
-		imgResized.save(os.path.join("resized_pics",outfilename), "JPEG")
+		resized.save(os.path.join("resized_pics",outfilename), "JPEG")
 
 		bar.update(counter)
 		counter += 1
@@ -102,7 +102,7 @@ bar.finish()
 w, h = 4, number_of_pictures
 avg_colors = [[0 for x in range(w)] for y in range(h)] #list of avg colors
 index = 0
-print ("STEP 3 || Calculating average colors for pics")
+print ("\nSTEP 3 || Calculating average colors for pics")
 bar.start()
 for infile in os.listdir("resized_pics"):
 	img = Image.open(os.path.join("resized_pics",infile))
@@ -126,7 +126,7 @@ x_offset = 0
 y_offset = 0
 counter = 1
 
-print ("STEP 4 || Generating merged picture")
+print ("\nSTEP 4 || Generating merged picture")
 mergebar.start()
 if bigpic.mode in ('RGBA', 'LA') or (bigpic.mode == 'P' and 'transparency' in bigpic.info):
 	pixels = list(bigpic.convert('RGBA').getdata())
@@ -136,7 +136,7 @@ if bigpic.mode in ('RGBA', 'LA') or (bigpic.mode == 'P' and 'transparency' in bi
 		closest_color_diff = colordiff(r, g, b, avg_colors[0][0], avg_colors[0][1], avg_colors[0][2])
 		#print (closest_color_diff)
 
-		index_of_matching_pic = 0
+		index_of_matching_pic = 1
 		for picavg in avg_colors:
 			localdiff = colordiff(r, g, b, picavg[0], picavg[1], picavg[2])
 			if (localdiff < closest_color_diff):
@@ -149,12 +149,12 @@ if bigpic.mode in ('RGBA', 'LA') or (bigpic.mode == 'P' and 'transparency' in bi
 		merged_image.paste(matching_pic, (x_offset, y_offset))
 
 		if (counter % bigpicW == 0):
-			y_offset += hsize
+			y_offset += subpic_minH
 			x_offset = 0
 		else:
-			x_offset += basewidth
+			x_offset += subpic_minW
 		mergebar.update(counter)
 		counter += 1
 mergebar.finish()
 
-merged_image.save("merged_pics/merged_pic7.jpg")
+merged_image.save("merged_pics/merged_picXX.jpg")
