@@ -16,4 +16,4 @@ The script:
 The script expects sub pictures to be in a folder named *pics*.  
   
   
-It is not quick. With a set of  around 600 subpics it takes 2-3 hours to finish the merging.
+It is not quick (yet). With a set of  around 600 subpics it takes 2-3 hours to finish the merging.
